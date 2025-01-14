@@ -25,6 +25,7 @@ use PKP\security\Validation;
 use PKP\session\SessionManager;
 use Illuminate\Support\Facades\DB;
 use PKP\facades\Locale;
+use PKP\user\InterestManager;
 
 class CspUserPlugin extends GenericPlugin {
 
@@ -292,12 +293,19 @@ class CspUserPlugin extends GenericPlugin {
             $editUser->setData('givenName', $form->_data["givenName"][$currentLocale], $key);
             $editUser->setData('familyName', $form->_data["familyName"][$currentLocale], $key);
         }
-	}
+    }
 
     // Integração de login Sagas com OJS
     public function loadHandler($hookName, $args){
         if( $args[0] == "login" && ($args[1] == "signIn" or $args[1] == "requestResetPassword")){
             $request = Application::get()->getRequest();
+            if($args[1] == "requestResetPassword"){
+                $user = Repo::user()->getByEmail($request->getUserVar('email'));
+                if ($user){
+                    return;
+                }
+
+            }
             $results = DB::table('csp.Login as l')
             ->select(
                 'login AS username',
