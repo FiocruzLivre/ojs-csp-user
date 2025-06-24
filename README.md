@@ -7,5 +7,9 @@ Plugin to add custom fields and customizes user edition area in Open Journal Sys
 
 ## Installation
 
-- Clone this repo: ``` git clone git@github.com:LibreCodeCoop/ojs-csp-user.git plugins/generic/cspUser ```
-- Enable the plugin in Website > Plugins
+1) Clone this repo inside the directory ``ojs/plugins/generic/`` :
+
+   ``https://github.com/FiocruzLivre/ojs-csp-user.git cspUser``
+
+    > The plugin must be inside a _cspUser_ named folder
+2) In the system, enable the plugin in _Website > Plugins_ area
