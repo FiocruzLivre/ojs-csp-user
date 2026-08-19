@@ -1,15 +1,14 @@
 {**
  * templates/user/publicProfileForm.tpl
  *
- * Copyright (c) 2014-2020 Simon Fraser University
- * Copyright (c) 2003-2020 John Willinsky
+ * Copyright (c) 2014-2021 Simon Fraser University
+ * Copyright (c) 2003-2021 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * Public user profile form.
+ *
+ * @hook User::PublicProfile::AdditionalItems []
  *}
-
-{* Help Link *}
-{help file="user-profile" class="pkp_help_tab"}
 
 <script type="text/javascript">
 	$(function() {ldelim}
@@ -23,8 +22,11 @@
 					baseUrl: {$baseUrl|json_encode},
 					filters: {ldelim}
 						mime_types : [
-							{ldelim} title : "Image files", extensions : "jpg,jpeg,png,svg,gif" {rdelim}
+							{ldelim} title : "Image files", extensions : "jpg,jpeg,png,gif" {rdelim}
 						]
+					{rdelim},
+					multipart_params: {ldelim}
+						csrfToken: {csrf type="json"}
 					{rdelim},
 					resize: {ldelim}
 						width: {$profileImageMaxWidth|intval},
@@ -37,6 +39,11 @@
 	{rdelim});
 </script>
 
+{* Form for deleting the profile image (placed here to avoid nesting forms) *}
+<form type="post" action="{url op="deleteProfileImage"}" id="deleteProfileImageForm">
+	{csrf}
+</form>
+
 <form class="pkp_form" id="publicProfileForm" method="post" action="{url op="savePublicProfile"}" enctype="multipart/form-data">
 	{csrf}
 
@@ -47,7 +54,7 @@
 			{* Add a unique ID to prevent caching *}
 			<img src="{$baseUrl}/{$publicSiteFilesPath}/{$profileImage.uploadName}?{""|uniqid}" alt="{translate key="user.profile.form.profileImage"}" />
 			<div>
-				<a class="pkp_button pkp_button_offset" href="{url op="deleteProfileImage"}">{translate key="common.delete"}</a>
+				<button onclick="document.getElementById('deleteProfileImageForm').submit(); return false;" class="pkp_button pkp_button_offset">{translate key="common.delete"}</button>
 			</div>
 		{/if}
 	{/fbvFormSection}
@@ -68,9 +75,11 @@
 	{call_hook name="User::PublicProfile::AdditionalItems"}
 
 	<p>
-		{capture assign="privacyUrl"}{url router=$smarty.const.ROUTE_PAGE page="about" op="privacy"}{/capture}
+		{capture assign="privacyUrl"}{url router=PKP\core\PKPApplication::ROUTE_PAGE page="about" op="privacy"}{/capture}
 		{translate key="user.privacyLink" privacyUrl=$privacyUrl}
 	</p>
-	
+
+	<p><span class="formRequired">{translate key="common.requiredField"}</span></p>
+
 	{fbvFormButtons hideCancel=true submitText="common.save"}
 </form>

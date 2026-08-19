@@ -10,6 +10,12 @@
 {extends file="layouts/backend.tpl"}
 
 {block name="page"}
+	{if $userFutureRoleStartDate}
+		<Notification>
+			<h2 class="text-3xl-bold text-heading"> {translate key="user.futureRole.notification.message" roleStartDate=$userFutureRoleStartDate}</h2>
+			<p> {translate key="user.futureRole.notification.description"}</p>
+		</Notification>
+	{/if}
 	<h1 class="app__pageHeading">
 		{translate key="user.profile"}
 	</h1>
@@ -22,13 +28,13 @@
 	</script>
 	<div id="profileTabs" class="pkp_controllers_tab">
 		<ul>
-			<li><a name="identity" href="{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="identity"}">{translate key="user.profile.identity"}</a></li>
-			<li><a name="contact" href="{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="contact"}">{translate key="user.profile.contact"}</a></li>
-			<li><a name="roles" href="{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="roles"}">{translate key="plugins.themes.csp.user.interests"}</a></li>
-			<li><a name="publicProfile" href="{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="publicProfile"}">{translate key="user.profile.public"}</a></li>
-			<li><a name="changePassword" href="{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="changePassword"}">{translate key="user.password"}</a></li>
-			<li><a name="notificationSettings" href="{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="notificationSettings"}">{translate key="notification.notifications"}</a></li>
-			{* <li><a name="apiSettings" href="{url router=\PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="apiProfile"}">{translate key="user.apiKey"}</a></li> *}
+			<li><a name="identity" href="{url router=PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="identity"}">{translate key="user.profile.identity"}</a></li>
+			<li><a name="contact" href="{url router=PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="contact"}">{translate key="user.profile.contact"}</a></li>
+			<li><a name="roles" href="{url router=PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="roles"}">{translate key="plugins.themes.csp.user.interests"}</a></li>
+			<li><a name="publicProfile" href="{url router=PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="publicProfile"}">{translate key="user.profile.public"}</a></li>
+			<li><a name="changePassword" href="{url router=PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="changePassword"}">{translate key="user.password"}</a></li>
+			<li><a name="notificationSettings" href="{url router=PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="notificationSettings"}">{translate key="notification.notifications"}</a></li>
+			{* <li><a name="apiSettings" href="{url router=PKP\core\PKPApplication::ROUTE_COMPONENT component="tab.user.ProfileTabHandler" op="apiProfile"}">{translate key="user.apiKey"}</a></li> *}
 		</ul>
 	</div>
 {/block}
