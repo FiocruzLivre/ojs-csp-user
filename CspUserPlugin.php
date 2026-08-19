@@ -20,10 +20,6 @@ use APP\facades\Repo;
 use PKP\security\Role;
 use PKP\services\PKPSchemaService;
 use APP\core\Services;
-use PKP\core\Core;
-use PKP\security\Validation;
-use PKP\session\SessionManager;
-use Illuminate\Support\Facades\DB;
 use PKP\facades\Locale;
 use PKP\user\InterestManager;
 
@@ -57,7 +53,6 @@ class CspUserPlugin extends GenericPlugin {
             Hook::add('identityform::execute', array($this, 'identityFormExecute'));
 
             Hook::add('TemplateResource::getFilename', [$this, '_overridePluginTemplates']);
-            Hook::add('LoadHandler', [$this, 'loadHandler']);
         }
 
         return $success;
@@ -292,92 +287,6 @@ class CspUserPlugin extends GenericPlugin {
         foreach ($supportedLocales as $key => $value) {
             $editUser->setData('givenName', $form->_data["givenName"][$currentLocale], $key);
             $editUser->setData('familyName', $form->_data["familyName"][$currentLocale], $key);
-        }
-    }
-
-    // Integração de login Sagas com OJS
-    public function loadHandler($hookName, $args){
-        if( $args[0] == "login" && ($args[1] == "signIn" or $args[1] == "requestResetPassword")){
-            $request = Application::get()->getRequest();
-            if($args[1] == "requestResetPassword"){
-                $user = Repo::user()->getByEmail($request->getUserVar('email'));
-                if ($user){
-                    return;
-                }
-
-            }
-            $results = DB::table('csp.Login as l')
-            ->select(
-                'login AS username',
-                'p.email',
-                'p.telefone AS phone',
-                'p.orcid AS orcid',
-                'p.nome AS givenName',
-                'p.idioma',
-                'p.lattes',
-                'p.sexo',
-                'p.observacao',
-                'p.instituicao1',
-                'p.instituicao2',
-                'p.endereco',
-                'p.cidade',
-                'p.estado',
-                'p.cep'
-            )
-            ->leftJoin('ojs.users as ou', 'ou.username', '=', 'l.login')
-            ->join('csp.Pessoa as p', 'l.idPessoaFK', '=', 'p.idPessoa');
-            if ($args[1] == "signIn") {
-                $results->where('login','=', $request->getUserVar('username'));
-                $results->where('l.senha', '=', sha1($request->getUserVar('password')));
-            }
-            if($args[1] == "requestResetPassword"){
-                $results->where('p.email','=', $request->getUserVar('email'));
-            }
-            $results->whereNull('ou.user_id');
-            $row = $results->first();
-
-            if($row){
-                $user = Repo::user()->newDataObject();
-                $user->setUsername($row->username);
-                $user->setEmail($row->email);
-                // $user->setPhone($row->phone);
-                $user->setOrcid($row->orcid);
-                $user->setUrl($row->lattes);
-                $user->setData('zipCode',$row->cep);
-                $user->setData('city',$row->cidade);
-                $user->setData('region',$row->estado);
-                $user->setData('affiliation2',$row->instituicao2);
-                $user->setData('mailingAddress',$row->endereco);
-                $user->setData('gender',$row->sexo);
-                $supportedLocales = Locale::getSupportedLocales();
-                foreach ($supportedLocales as $key => $value) {
-                    $user->setGivenName($row->givenName, $key);
-                    $user->setAffiliation($row->instituicao1, $key);
-                }
-                $password = $request->getUserVar('password') ? $request->getUserVar('password') : base64_encode(random_bytes(10));
-                $user->setDateRegistered(Core::getCurrentDate());
-                $user->setInlineHelp(1); // default new users to having inline help visible.
-                $user->setPassword(Validation::encryptCredentials($row->username, $password));
-                Repo::user()->add($user);
-                $userId = $user->getId();
-                if (!$userId) {
-                    return false;
-                }
-                // Associate the new user with the existing session
-                $sessionManager = SessionManager::getManager();
-                $session = $sessionManager->getUserSession();
-                $session->setSessionVar('username', $user->getUsername());
-
-                $defaultReaderGroup = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_READER], $request->getContext()->getId(), true)->first();
-                $reviewerGroup = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_REVIEWER], $request->getContext()->getId(), true)->first();
-                Repo::userGroup()->assignUserToGroup($user->getId(), $defaultReaderGroup->getId(), $request->getContext()->getId());
-                Repo::userGroup()->assignUserToGroup($user->getId(), $reviewerGroup->getId(), $request->getContext()->getId());
-
-                $basePath = $request->getBasePath();
-                $contextPath = $request->getContext()->getPath();
-                $basePath = $request->getBasePath();
-                $request->_requestVars["source"] = $basePath.'/index.php/'.$contextPath."/user/profile";
-            }
         }
     }
 
