@@ -19,7 +19,7 @@
 
 	{include file="controllers/notification/inPlaceNotification.tpl" notificationId="contactFormNotification"}
 
-	{fbvFormSection}
+	{fbvFormSection title="user.email" required="true" size=$fbvStyles.size.LARGE}
 		{if $changeEmailPending}
 			<p>
 				{fbvElement type="hidden" id="pendingEmail" value=$changeEmailPending}
@@ -27,20 +27,32 @@
 				<button type="submit" class="pkp_button" name="action" value="cancelPendingEmail">{translate key="common.cancel"}</button>
 			</p>
 		{/if}
-		{fbvElement type="email" readonly=$changeEmailPending|default:false label="user.email" id="email" value=$email size=$fbvStyles.size.MEDIUM required=true}
-		{fbvElement type="textarea" label="user.signature" multilingual="true" name="signature" id="signature" value=$signature rich=true size=$fbvStyles.size.MEDIUM}
-		{fbvElement type="tel" label="user.phone" name="phone" id="phone" value=$phone maxlength="24" size=$fbvStyles.size.SMALL}
-		{fbvElement type="text" label="user.affiliation" multilingual="true" name="affiliation" id="affiliation" value=$affiliation size=$fbvStyles.size.MEDIUM}
-		{fbvElement type="text" label="user.affiliation" name="affiliation2" id="affiliation2" value=$affiliation2 size=$fbvStyles.size.MEDIUM}
+		{fbvElement type="email" readonly=$changeEmailPending|default:false id="email" value=$email size=$fbvStyles.size.MEDIUM required=true}
 	{/fbvFormSection}
-	{fbvFormSection}
-		{fbvElement type="textarea" label="common.mailingAddress" name="mailingAddress" id="mailingAddress" rich=true value=$mailingAddress size=$fbvStyles.size.MEDIUM}
-		{fbvElement type="text" label="stats.city" name="city" id="city" value=$city size=$fbvStyles.size.MEDIUM}
-		{fbvElement type="text" label="plugins.themes.csp.user.region" name="region" id="region" value=$region size=$fbvStyles.size.MEDIUM}
-		{fbvElement type="text" label="plugins.themes.csp.user.zip.code" name="zipCode" id="zipCode" value=$zipCode size=$fbvStyles.size.MEDIUM}
-		{fbvElement type="select" label="common.country" name="country" id="country" required=true defaultLabel="" defaultValue="" from=$countries selected=$country translate=false size=$fbvStyles.size.MEDIUM}
+	{fbvFormSection title="user.affiliation" size=$fbvStyles.size.LARGE required=true}
+		{fbvElement type="text" name="affiliation" id="affiliation" value=$affiliation multilingual="true" required="true"}
 	{/fbvFormSection}
-
+	{fbvFormSection title="user.affiliation" size=$fbvStyles.size.LARGE required=false}
+		{fbvElement type="text" name="affiliation2" id="affiliation2" value=$affiliation2 required=false}
+	{/fbvFormSection}
+	{fbvFormSection title="common.mailingAddress" size=$fbvStyles.size.LARGE required=true}
+		{fbvElement type="text" name="mailingAddress" id="mailingAddress" rich=true value=$mailingAddress required="true"}
+	{/fbvFormSection}
+	{fbvFormSection title="stats.city" size=$fbvStyles.size.LARGE required=true}
+		{fbvElement type="text" name="city" id="city" rich=true value=$city required="true"}
+	{/fbvFormSection}
+	{fbvFormSection title="plugins.themes.csp.user.region" size=$fbvStyles.size.LARGE required=false}
+		{fbvElement type="text" name="region" id="region" rich=true value=$region required=false}
+	{/fbvFormSection}
+	{fbvFormSection title="plugins.themes.csp.user.zip.code" size=$fbvStyles.size.LARGE required=false}
+		{fbvElement type="text" name="zipCode" id="zipCode" rich=true value=$zipCode required=false}
+	{/fbvFormSection}
+	{fbvFormSection title="common.country" size=$fbvStyles.size.LARGE required=true}
+		{fbvElement type="select" name="country" id="country" required=true defaultLabel="" defaultValue="" from=$countries selected=$country translate=false}
+	{/fbvFormSection}
+	{fbvFormSection title="user.signature" size=$fbvStyles.size.LARGE}
+		{fbvElement type="textarea" multilingual="true" name="signature" id="signature" value=$signature rich=true}
+	{/fbvFormSection}
 	{if count($availableLocales) > 1}
 		{fbvFormSection title="user.workingLanguages" list=true}
 			{foreach from=$availableLocales key=localeKey item=localeName}

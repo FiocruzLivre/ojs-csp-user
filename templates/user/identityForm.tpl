@@ -59,14 +59,14 @@
 		{fbvElement type="select" name="breed" id="breed" required=true defaultLabel="" defaultValue="" from=$breeds selected=$breed translate=false}
 	{/fbvFormSection}
 
-	{fbvFormSection for="preferredPublicName" description="user.preferredPublicName.description"}
-		{fbvElement type="text" label="user.preferredPublicName" multilingual="true" name="preferredPublicName" id="preferredPublicName" value=$preferredPublicName size=$fbvStyles.size.LARGE}
+	{fbvFormSection for="preferredPublicName" title="user.preferredPublicName"}
+		{fbvElement type="text" label="user.preferredPublicName.description" multilingual="true" name="preferredPublicName" id="preferredPublicName" value=$preferredPublicName size=$fbvStyles.size.LARGE}
 	{/fbvFormSection}
 
 
-	{fbvFormSection for="preferredAvatarInitials" description="user.preferredAvatarInitials.description"}
+	{* {fbvFormSection for="preferredAvatarInitials" description="user.preferredAvatarInitials.description"}
 		{fbvElement type="text" label="user.preferredAvatarInitials" name="preferredAvatarInitials" maxlength="2" id="preferredAvatarInitials" value=$preferredAvatarInitials size=$fbvStyles.size.SMALL}
-	{/fbvFormSection}
+	{/fbvFormSection} *}
 
 	{if $orcidEnabled}
 
