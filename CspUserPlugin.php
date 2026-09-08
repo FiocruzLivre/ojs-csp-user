@@ -52,6 +52,11 @@ class CspUserPlugin extends GenericPlugin {
             Hook::add('identityform::readuservars', array($this, 'identityFormReaduservars'));
             Hook::add('identityform::execute', array($this, 'identityFormExecute'));
 
+            Hook::add('publicprofileform::Constructor', [$this, 'publicProfileFormConstructor']);
+            Hook::add('publicprofileform::display', [$this, 'publicProfileFormDisplay']);
+            Hook::add('publicprofileform::readuservars', [$this, 'publicProfileFormReadUserVars']);
+            Hook::add('publicprofileform::execute', [$this, 'publicProfileFormExecute']);
+
             Hook::add('TemplateResource::getFilename', [$this, '_overridePluginTemplates']);
         }
 
@@ -290,5 +295,27 @@ class CspUserPlugin extends GenericPlugin {
             $editUser->setData('familyName', $form->_data["familyName"][$currentLocale], $key);
         }
     }
+
+	public function publicProfileFormConstructor(string $hookName, array $args)
+	{
+		$form =& $args[0];
+        $form->addCheck(new \PKP\form\validation\FormValidatorORCID($form, 'orcid', 'required', 'user.orcid.orcidInvalid'));
+	}
+
+	public function publicProfileFormDisplay(string $hookName, array $args){
+        $user = Repo::user()->get($args[0]->_user->getData('id'), true);
+		$args[0]->_data["orcid"] = $user->getData('orcid');
+	}
+
+	public function publicProfileFormReadUserVars(string $hookName, array $args){
+		$args[1][] = 'orcid';
+	}
+
+	public function publicProfileFormExecute(string $hookName, array $args)
+	{
+		$form = &$args[0];
+		$editUser = $form->_user;
+		$editUser->setData('orcid', $form->getData('orcid'));
+	}
 
 }
