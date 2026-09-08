@@ -172,7 +172,7 @@ class CspUserPlugin extends GenericPlugin {
 	public function registrationFormExecute(string $hookName, array $args)
 	{
 		$form = &$args[0];
-
+    
 		$newUser = $form->user;
 		$newUser->setData('url', $form->getData('url'));
 		$newUser->setData('gender', $form->getData('gender'));
@@ -191,9 +191,10 @@ class CspUserPlugin extends GenericPlugin {
             $newUser->setData('familyName', $form->getData('familyName'), $key);
         }
 
+        // Atribui papel de avaliador a todo novo usuário registrado
         $request = Application::get()->getRequest();
-        $reviewerGroup = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_REVIEWER], $request->getContext()->getId(), true)->first()->getId();
-        $readerGroup = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_READER], $request->getContext()->getId(), true)->first()->getId();
+        $reviewerGroup = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_REVIEWER], $request->getContext()->getId(), true)->first()->id;
+        $readerGroup = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_READER], $request->getContext()->getId(), true)->first()->id;
         $form->setData('reviewerGroup', array($reviewerGroup => $reviewerGroup));
         $form->setData('readerGroup', array($readerGroup => $readerGroup));
 	}
