@@ -196,12 +196,15 @@ class CspUserPlugin extends GenericPlugin {
             $newUser->setData('familyName', $form->getData('familyName'), $key);
         }
 
-        // Atribui papel de avaliador a todo novo usuário registrado
+        // Atribui papel de avaliador, leitor e autor a todo novo usuário registrado
         $request = Application::get()->getRequest();
-        $reviewerGroup = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_REVIEWER], $request->getContext()->getId(), true)->first()->id;
+        $reviewerGroup = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_REVIEWER], $request->getContext()->getId(), true)->first(fn($group) => $group->permitSelfRegistration)->id;
         $readerGroup = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_READER], $request->getContext()->getId(), true)->first()->id;
+        $authorGroup = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_AUTHOR], $request->getContext()->getId(), true)->first(fn($group) => $group->permitSelfRegistration)->id;
+
         $form->setData('reviewerGroup', array($reviewerGroup => $reviewerGroup));
         $form->setData('readerGroup', array($readerGroup => $readerGroup));
+        $form->setData('authorGroup', array($authorGroup => $authorGroup));
 	}
 
 
