@@ -103,13 +103,6 @@ class CspUserPlugin extends GenericPlugin {
             'validation' => ['nullable']
         ];
 
-        $schema->properties->affiliation2 = (object) [
-            "type" => "string",
-            "multilingual" => false,
-            "apiSummary" => true,
-            "validation" => ["nullable"]
-        ];
-    
         $schema->properties->city = (object) [
             'type' => 'string',
             'multilingual' => false,
@@ -165,7 +158,6 @@ class CspUserPlugin extends GenericPlugin {
 		$args[1][] = 'url';
 		$args[1][] = 'gender';
         $args[1][] = 'breed';
-		$args[1][] = 'affiliation2';
 		$args[1][] = 'mailingAddress';
 		$args[1][] = 'city';
 		$args[1][] = 'region';
@@ -182,7 +174,6 @@ class CspUserPlugin extends GenericPlugin {
 		$newUser->setData('url', $form->getData('url'));
 		$newUser->setData('gender', $form->getData('gender'));
         $newUser->setData('breed', $form->getData('breed'));
-		$newUser->setData('affiliation2', $form->getData('affiliation2'));
 		$newUser->setData('mailingAddress', $form->getData('mailingAddress'));
 		$newUser->setData('city', $form->getData('city'));
 		$newUser->setData('region', $form->getData('region'));
@@ -211,14 +202,12 @@ class CspUserPlugin extends GenericPlugin {
 	public function contactFormDisplay(string $hookName, array $args){
         $user = Repo::user()->get($args[0]->_user->getData('id'), true);
 
-		$args[0]->_data["affiliation2"] = $user->getData('affiliation2');
 		$args[0]->_data["city"] = $user->getData('city');
 		$args[0]->_data["region"] = $user->getData('region');
 		$args[0]->_data["zipCode"] = $user->getData('zipCode');
 	}
 
 	public function contactFormReaduservars(string $hookName, array $args){
-		$args[1][] = 'affiliation2';
 		$args[1][] = 'city';
 		$args[1][] = 'region';
 		$args[1][] = 'zipCode';
@@ -228,7 +217,6 @@ class CspUserPlugin extends GenericPlugin {
 		$form = &$args[0];
 
 		$editUser = $form->_user;
-		$editUser->setData('affiliation2', $form->getData('affiliation2'));
 		$editUser->setData('city', $form->getData('city'));
 		$editUser->setData('region', $form->getData('region'));
 		$editUser->setData('zipCode', $form->getData('zipCode'));
@@ -286,7 +274,6 @@ class CspUserPlugin extends GenericPlugin {
 		$editUser->setData('gender', $form->getData('gender'));
         $editUser->setData('breed', $form->getData('breed'));
         $user = Repo::user()->get($args[0]->_user->getData('id'), true);
-		$editUser->setData('affiliation2', $user->getData('affiliation2'));
 		$editUser->setData('city', $user->getData('city'));
 		$editUser->setData('region', $user->getData('region'));
 		$editUser->setData('zipCode', $user->getData('zipCode'));

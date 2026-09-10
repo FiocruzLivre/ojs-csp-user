@@ -83,12 +83,6 @@
 				<input class="form-control" type="text" name="affiliation" autocomplete="organization" id="affiliation" value="{$affiliation|default:""|escape}" required aria-required="true">
 			</label>
 		</div>
-		<div class="form-group affiliation2">
-			<label>
-				{translate key="user.affiliation"}2
-				<input class="form-control" type="text" name="affiliation2" id="affiliation2" value="{$affiliation2|escape}">
-			</label>
-		</div>
 		<div class="form-group country">
 			<label>
 			<div id="fr">
