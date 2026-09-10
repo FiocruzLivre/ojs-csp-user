@@ -32,6 +32,9 @@
 	{fbvFormSection title="user.affiliation" size=$fbvStyles.size.LARGE required=true}
 		{fbvElement type="text" name="affiliation" id="affiliation" value=$affiliation multilingual="true" required="true"}
 	{/fbvFormSection}
+	{fbvFormSection title="user.affiliation" size=$fbvStyles.size.LARGE required=false}
+		{fbvElement type="text" name="affiliation2" id="affiliation2" value=$affiliation2 required=false}
+	{/fbvFormSection}
 	{fbvFormSection title="common.mailingAddress" size=$fbvStyles.size.LARGE required=true}
 		{fbvElement type="text" name="mailingAddress" id="mailingAddress" rich=true value=$mailingAddress required="true"}
 	{/fbvFormSection}
